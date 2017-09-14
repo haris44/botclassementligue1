@@ -29,7 +29,6 @@ client.on('message', msg => {
                         }, 0);
                         msg.channel.send(classement);
                });
-  }
 
 });
 
