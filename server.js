@@ -17,7 +17,6 @@ client.on('message', msg => {
 
                 request(options, function (error, response, body) {
                 if (error) throw new Error(error);
-                        console.log(body);
                         var jsonData = JSON.parse(body)
                         var classement = "";
                         msg.reply("Le classement de ligue 1 :")
