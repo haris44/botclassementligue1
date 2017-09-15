@@ -46,7 +46,7 @@ client.on('message', msg => {
                         var jsonData = JSON.parse(body)
                         msg.reply("Le classement de ligue 1 :")
                         var classement = jsonData.standing.reduce(function(tab, value) {
-                          return a + value.position + " : " + value.teamName + "   " + value.points + "\n";
+                          return tab + value.position + " : " + value.teamName + "   " + value.points + "\n";
                         }, 0);
                         msg.channel.send(classement);
                });
