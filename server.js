@@ -38,7 +38,7 @@ client.on('message', msg => {
     var fs = require('fs');
     var obj = JSON.parse(fs.readFileSync('league.json', 'utf8'));
 
-    function seuil(checkNameforId) {
+    function checkNameforId(element) {
       return element.name === country;
     }
     var idLeague = obj.league.find(checkNameforId);
