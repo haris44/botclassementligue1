@@ -1,6 +1,18 @@
+// si tu est sur vscode, essaye d'installer les dépendances es-lint et npm-intellisense et ajoute :
+/* 
+{
+    "eslint.autoFixOnSave": true,
+    "npm-intellisense.scanDevDependencies": true,
+    "editor.formatOnSave": true,
+}
 
-const Discord = require("discord.js");
-const request = require("request");
+Sinon c'est beaucoup mieux. Essaye de prendre l'habitude de mettre des const
+L'avantage, c'est qu'une bonne partie des mauvaises pratiques ne peuvent pas se faire avec des const (for ...) 
+Donc ça veux dire que dés que tu écrit un var et que tu est obligé de mettre un var, c'est qu'il y a un problème
+quelque part.
+*/
+const Discord = require('discord.js');
+const request = require('request');
 const client = new Discord.Client();
 const express = require('express');
 const app = express();
@@ -14,13 +26,13 @@ app.use(express.static(__dirname + '/public'));
 
 // set the home page route
 app.get('/', (request, response) => {
-    // ejs render automatically looks in the views folder
-    response.render('index');
+  // ejs render automatically looks in the views folder
+  response.render('index');
 });
 
 app.listen(port, () => {
-    // will echo 'Our app is running on http://localhost:5000 when run locally'
-    console.log('Our app is running on http://localhost:' + port);
+  // will echo 'Our app is running on http://localhost:5000 when run locally'
+  console.log('Our app is running on http://localhost:' + port);
 });
 
 client.on('ready', () => {
@@ -32,53 +44,63 @@ client.on('message', msg => {
   if (!msg.content.includes('!Classement'))
     return
 
-    var splitString = msg.content.split(" ");
-    var country = splitString[1];
+  // must be const :p 
+  let splitString = msg.content.split(' ');
+  let country = splitString[1];
 
-    var fs = require('fs');
-    var obj = JSON.parse(fs.readFileSync('league.json', 'utf8'));
+  let fs = require('fs');
+  // Require doivent etre const et en haut du prog
 
-    function checkNameforId(element) {
-      return element.name === country;
-    }
-    var idLeague = obj.league.find(checkNameforId);
+  let obj = JSON.parse(fs.readFileSync('league.json', 'utf8'));
 
-    var options = {
-                        method: 'GET',
-                        url: 'http://api.football-data.org/v1/competitions/'+ idLeague.id +'/leagueTable',
-                        headers: { 'X-Auth-Token': process.env.AUTH_TOKEN }
-                  }
+  // tu peut utiliser cette fonction directement dans le find (fn anonyme / arrow fn)
+  function checkNameforId(element) {
+    return element.name === country;
+  }
+  let idLeague = obj.league.find(checkNameforId);
 
-                request(options, function (error, response, body) {
-                if (error) throw new Error(error);
-                        var jsonData = JSON.parse(body)
+  let options = {
+    method: 'GET',
+    url: 'http://api.football-data.org/v1/competitions/' + idLeague.id + '/leagueTable',
+    headers: { 'X-Auth-Token': process.env.AUTH_TOKEN }
+  }
 
-                        msg.reply("Le classement de " + jsonData.leagueCaption +":")
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
 
-                        var position = jsonData.standing.reduce(function(tab, value) {
-                          return tab +value.position + "\n";
-                        }, 0);
+    // must be const
+    let jsonData = JSON.parse(body)
 
-                        var equipe = jsonData.standing.reduce(function(tab, value) {
-                          return tab + value.teamName + "\n";
-                        }, "");
+    msg.reply('Le classement de ' + jsonData.leagueCaption + ':')
 
-                        var points = jsonData.standing.reduce(function(tab, value) {
-                          return tab + value.points + "\n";
-                        }, 0);
+    // c'est beaucoup mieux que avant, maintenant tu peut encore simplifié grace à la fonction join
+    // must be const
+    let position = jsonData.standing.reduce(function (tab, value) {
+      return tab + value.position + '\n';
+    }, 0);
 
-                        var embed = new Discord.RichEmbed()
-                          .addField("Position",position , true)
-                          .addField("Equipe",equipe, true)
-                          .addField("Points",points, true)
-                        msg.channel.sendEmbed(embed)
-               });
+    // must be const
+    let equipe = jsonData.standing.reduce(function (tab, value) {
+      return tab + value.teamName + '\n';
+    }, '');
+
+    // must be const
+    let points = jsonData.standing.reduce(function (tab, value) {
+      return tab + value.points + '\n';
+    }, 0);
+
+    // must be const
+    let embed = new Discord.RichEmbed()
+      .addField('Position', position, true)
+      .addField('Equipe', equipe, true)
+      .addField('Points', points, true)
+    msg.channel.sendEmbed(embed)
+  });
 
 });
 
-// NE JAMAIS PUSH DE TOKEN SUR GITHUB !!!!!
 client.login(process.env.TOKEN);
 
 setInterval(() => {
- http.get('https://polar-temple-67867.herokuapp.com/');
+  http.get('https://polar-temple-67867.herokuapp.com/');
 }, 900000);
