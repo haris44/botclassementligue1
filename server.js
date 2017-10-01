@@ -52,7 +52,14 @@ client.on('message', msg => {
                 request(options, function (error, response, body) {
                 if (error) throw new Error(error);
                         var jsonData = JSON.parse(body)
+
                         msg.reply("Le classement de " + jsonData.leagueCaption +":")
+
+                        var embed = new Discord.RichEmbed()
+                          .addField("test","1 \n 2 \n 3", true)
+                          .addField("test2","1 \n 2 \n 3", true)
+                        msg.channel.sendEmbed(embed)
+
                         var classement = jsonData.standing.reduce(function(tab, value) {
                           return tab + "**" +value.position + "** : " + value.teamName + "   " + value.points + "\n";
                         }, 0);
