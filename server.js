@@ -61,7 +61,7 @@ client.on('message', msg => {
 
                         var equipe = jsonData.standing.reduce(function(tab, value) {
                           return tab + value.teamName + "\n";
-                        }, 0);
+                        }, "");
 
                         var points = jsonData.standing.reduce(function(tab, value) {
                           return tab + value.points + "\n";
