@@ -4,9 +4,6 @@ const request = require("request");
 const client = new Discord.Client();
 const express = require('express');
 const app = express();
-
-const urlLigue1 = 'http://api.football-data.org/v1/competitions/450/leagueTable';
-
 const port = process.env.PORT || 5000;
 
 // set the view engine to ejs
@@ -32,21 +29,32 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 
-  if (msg.content !== '!Classement')
+  if (!msg.content.includes('!Classement'))
     return
+
+    var splitString = msg.content.split(" ");
+    var country = splitString[1];
+
+    var fs = require('fs');
+    var obj = JSON.parse(fs.readFileSync('league.json', 'utf8'));
+
+    function seuil(checkNameforId) {
+      return element.name === country;
+    }
+    var idLeague = obj.league.find(checkNameforId);
 
     var options = {
                         method: 'GET',
-                        url: urlLigue1,
+                        url: 'http://api.football-data.org/v1/competitions/'+ idLeague +'/leagueTable',
                         headers: { 'X-Auth-Token': process.env.AUTH_TOKEN }
                   }
 
                 request(options, function (error, response, body) {
                 if (error) throw new Error(error);
                         var jsonData = JSON.parse(body)
-                        msg.reply("Le classement de ligue 1 :")
+                        msg.reply("Le classement de " +jsonData.leagueCaption +":")
                         var classement = jsonData.standing.reduce(function(tab, value) {
-                          return tab + value.position + " : " + value.teamName + "   " + value.points + "\n";
+                          return tab + "**" +value.position + "** : " + value.teamName + "   " + value.points + "\n";
                         }, 0);
                         msg.channel.send(classement);
                });
