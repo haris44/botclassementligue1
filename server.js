@@ -45,14 +45,14 @@ client.on('message', msg => {
 
     var options = {
                         method: 'GET',
-                        url: 'http://api.football-data.org/v1/competitions/'+ idLeague +'/leagueTable',
+                        url: 'http://api.football-data.org/v1/competitions/'+ idLeague.id +'/leagueTable',
                         headers: { 'X-Auth-Token': process.env.AUTH_TOKEN }
                   }
 
                 request(options, function (error, response, body) {
                 if (error) throw new Error(error);
                         var jsonData = JSON.parse(body)
-                        msg.reply("Le classement de " +jsonData.leagueCaption +":")
+                        msg.reply("Le classement de " + jsonData.leagueCaption +":")
                         var classement = jsonData.standing.reduce(function(tab, value) {
                           return tab + "**" +value.position + "** : " + value.teamName + "   " + value.points + "\n";
                         }, 0);
