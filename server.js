@@ -55,15 +55,23 @@ client.on('message', msg => {
 
                         msg.reply("Le classement de " + jsonData.leagueCaption +":")
 
-                        var embed = new Discord.RichEmbed()
-                          .addField("test","1 \n 2 \n 3", true)
-                          .addField("test2","1 \n 2 \n 3", true)
-                        msg.channel.sendEmbed(embed)
-
-                        var classement = jsonData.standing.reduce(function(tab, value) {
-                          return tab + "**" +value.position + "** : " + value.teamName + "   " + value.points + "\n";
+                        var position = jsonData.standing.reduce(function(tab, value) {
+                          return tab +value.position + "\n";
                         }, 0);
-                        msg.channel.send(classement);
+
+                        var equipe = jsonData.standing.reduce(function(tab, value) {
+                          return tab + value.teamName + "\n";
+                        }, 0);
+
+                        var points = jsonData.standing.reduce(function(tab, value) {
+                          return tab + value.points + "\n";
+                        }, 0);
+
+                        var embed = new Discord.RichEmbed()
+                          .addField("Position",position , true)
+                          .addField("Equipe",equipe, true)
+                          .addField("Points",points, true)
+                        msg.channel.sendEmbed(embed)
                });
 
 });
